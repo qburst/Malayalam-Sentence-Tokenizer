@@ -12,14 +12,14 @@ class CustomTokenizerEvaluator:
         
         gt_data_path = os.path.join(base_path, "gt", filename)
         if not os.path.exists(gt_data_path):
-            raise Exception("Ground truth file is missing")
+            raise Exception("Ground truth file is missing - %s" % filename)
 
         with codecs.open(gt_data_path, 'r','utf8') as gtf:
             self._gt_tokens = gtf.readlines()
         
         input_data_path = os.path.join(base_path, "input", filename)
         if not os.path.exists(input_data_path):
-            raise Exception("Input data file is missing")
+            raise Exception("Input data file is missing - %s" % filename)
         with codecs.open(gt_data_path, 'r','utf8') as gtf:
             self._data = gtf.read()
 
