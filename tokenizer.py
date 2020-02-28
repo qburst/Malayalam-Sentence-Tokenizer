@@ -1,13 +1,17 @@
+import os
+import sys
 import re
-import os 
 import codecs
 import argparse
 
 
+ABBREVIATION_PATH = './abbreviations.txt'
+
+
 class RuleBasedSentenceTokenizer():
-    def __init__(self, model):
+    def __init__(self):
         self.regex = r'([ഀ-ൿ\u200C\u200D"A-Za-z]+ *\.|[0-9]+ *\. )'
-        self.abb_list = self.__read_abbreviations(model)
+        self.abb_list = self.__read_abbreviations(ABBREVIATION_PATH)
 
     def __read_abbreviations(self, model):
         with codecs.open(
@@ -31,21 +35,32 @@ class RuleBasedSentenceTokenizer():
         return sentences
 
 
-def main(filepath, model, result_file):
+def main(base_path, result_dir):
 
-    with codecs.open(filepath, 'r','utf8') as fin:
-        data = fin.read()
-
-    tokenizer = RuleBasedSentenceTokenizer(model)
-    sentence_list = tokenizer.tokenize(data)
-    with open(result_file, "w+") as f:
-        f.writelines(sentence_list)
+    files = os.listdir(base_path)
+    for filename in files:
+        sentence_list = list()
+        input_path = os.path.join(base_path, filename)
+        with codecs.open(input_path, 'r','utf8') as fin:
+            data = fin.read()
+        
+        tokenizer = RuleBasedSentenceTokenizer()
+        sentence_list = tokenizer.tokenize(data)
+        sentence_list = map(lambda x: x+"\n", sentence_list)
+       
+        output_path = os.path.join(result_dir, filename)
+        with codecs.open(output_path, "w+", 'utf8') as fout:
+            fout.writelines(sentence_list)
 
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--src_file', default=None, help="Enter data path")
-    parser.add_argument('--model', default=None, help="Enter model file path")
-    parser.add_argument('--result_file', default=None, help="Enter result file path")
+    parser.add_argument('--src_dir', help="Enter data path", required=True)
+    parser.add_argument('--result_dir', help="Enter data path", required=True)
     args = parser.parse_args()
-    main(args.src_file, args.model, args.result_file)
+    src_dir = args.src_dir
+    result_dir = args.result_dir
+    if not os.path.isdir(src_dir) or not os.path.isdir(result_dir):
+        print("Invalid input/result directory")
+        sys.exit()
+    main(src_dir, result_dir)
