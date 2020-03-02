@@ -23,3 +23,11 @@ The evaluation script reads the input articles, ground truth files and the token
 ### Usage 
 `python eval.py --data_src ./dataset/`
 
+In order to execute the evaluation script the dataset directory should maintain the structure as  
+
+```
+    ./dataset  
+      ├── input                     # Input files  
+      ├── output                    # Tokenized output files  
+      ├── gt                        # Groundtruth tokenized file  
+```
