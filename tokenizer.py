@@ -1,8 +1,5 @@
-import os
-import sys
 import re
 import codecs
-import argparse
 
 
 ABBREVIATION_PATH = './abbreviations.txt'
@@ -34,33 +31,3 @@ class RuleBasedSentenceTokenizer():
                 sentences.append(data)
         return sentences
 
-
-def main(base_path, result_dir):
-
-    files = os.listdir(base_path)
-    for filename in files:
-        sentence_list = list()
-        input_path = os.path.join(base_path, filename)
-        with codecs.open(input_path, 'r','utf8') as fin:
-            data = fin.read()
-        
-        tokenizer = RuleBasedSentenceTokenizer()
-        sentence_list = tokenizer.tokenize(data)
-        sentence_list = map(lambda x: x+"\n", sentence_list)
-       
-        output_path = os.path.join(result_dir, filename)
-        with codecs.open(output_path, "w+", 'utf8') as fout:
-            fout.writelines(sentence_list)
-
-
-if __name__=="__main__":
-    parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--src_dir', help="Enter data path", required=True)
-    parser.add_argument('--result_dir', help="Enter data path", required=True)
-    args = parser.parse_args()
-    src_dir = args.src_dir
-    result_dir = args.result_dir
-    if not os.path.isdir(src_dir) or not os.path.isdir(result_dir):
-        print("Invalid input/result directory")
-        sys.exit()
-    main(src_dir, result_dir)
