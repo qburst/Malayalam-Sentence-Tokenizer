@@ -27,11 +27,9 @@ class RuleBasedSentenceTokenizer():
                 end_idx = data.index(end)+len(end)
                 sentence = data[: end_idx]
                 quotes_list = re.findall(self.quote_regex, sentence)
-                if (quotes_list and ((
-                    sentence.count('"') % 2 > 0) or (
-                        sentence.count('“') == sentence.count('”')))) or (
-                                not quotes_list and \
-                                        end.lower() not in self.abb_list):
+                if (quotes_list and ((sentence.count('"') % 2 > 0) \
+                        or (sentence.count('“') == sentence.count('”')))) \
+                        or (not quotes_list and end.lower() not in self.abb_list):
                     sentences.append(sentence)
                     data = data[end_idx:]
             if data:
